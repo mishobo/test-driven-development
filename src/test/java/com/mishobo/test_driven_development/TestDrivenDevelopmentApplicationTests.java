@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,8 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DisplayName("Test math operations in Calculator class")
 @SpringBootTest
 class TestDrivenDevelopmentApplicationTests {
-
-	//Arrange
+	//Arrange/Given
 	Calculator calculator = new Calculator();
 
 	@Test
@@ -28,9 +28,9 @@ class TestDrivenDevelopmentApplicationTests {
 	@DisplayName("Test 4/2")
 	@Test
 	void testDivide_forValidParameters() {
-		//Act
+		//Act/when
 		int result = calculator.divide(4, 2);
-		//assert
+		//assert/then
 		assertEquals(2, result);
 	}
 
@@ -46,14 +46,10 @@ class TestDrivenDevelopmentApplicationTests {
 	@Test
 	void testDivide_When4isDividedByO_ThrowArithmeticException() {
 		String expectedExceptionMessage = "/ by zero";
-
-
 		ArithmeticException actualException = assertThrows(ArithmeticException.class, () -> {
 			calculator.divide(4, 0);
 		}, "Expected ArithmeticException to be thrown");
-
 		System.out.println(actualException.getMessage());
-
 		assertEquals(expectedExceptionMessage, actualException.getMessage());
 	}
 
@@ -80,6 +76,16 @@ class TestDrivenDevelopmentApplicationTests {
 	@ParameterizedTest
 	@CsvSource({"100, 32, 68", "71, 32, 39", "45, 14, 31"})
 	void testIntegerSubtraction_WhenCsvParameterized(int minuend, int subtrahend, int expected) {
+		System.out.println(minuend + " - " + subtrahend + " = " + expected);
+		int result = calculator.integerSubtraction(minuend, subtrahend);
+		assertEquals(expected, result);
+	}
+
+
+	@DisplayName("integer subtraction from csv file")
+	@ParameterizedTest
+	@CsvFileSource(resources = "/integerSubtraction.csv")
+	void testIntegerSubtraction_WhenCsvProvided (int minuend, int subtrahend, int expected) {
 		System.out.println(minuend + " - " + subtrahend + " = " + expected);
 		int result = calculator.integerSubtraction(minuend, subtrahend);
 		assertEquals(expected, result);
