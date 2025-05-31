@@ -22,7 +22,6 @@ public class MethodOrderedByNameTest {
         System.out.println("testE");
     }
 
-
     @Test
     void testC(){
         System.out.println("testC");
