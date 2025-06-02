@@ -1,11 +1,21 @@
 package com.mishobo.test_driven_development.section7.service.implementation;
 
+import com.mishobo.test_driven_development.data.UserRepository;
 import com.mishobo.test_driven_development.section7.model.User;
 import com.mishobo.test_driven_development.section7.service.abstraction.UserService;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+
+@Service
 public class UserServiceImpl implements UserService {
+
+    UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
 
     @Override
@@ -30,8 +40,19 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("passwords do not match");
         }
 
-        String generatedId = UUID.randomUUID().toString();
-        user.setId(generatedId);
+        String id = UUID.randomUUID().toString();
+        user.setId(id);
+
+        boolean isUserCreated;
+
+        try {
+            isUserCreated = userRepository.save(user);
+        } catch (RuntimeException ex) {
+            throw new UserServiceException(ex.getMessage());
+        }
+
+        if(!isUserCreated) throw new UserServiceException("Could not save user");
+
         return user;
     }
 }

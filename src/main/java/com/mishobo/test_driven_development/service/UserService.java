@@ -3,6 +3,7 @@ package com.mishobo.test_driven_development.service;
 import java.util.Map;
 
 public interface UserService {
+
     String createUser(Map userDetails);
     Map updateUser(String userId, Map userDetails);
     Map getUserDetails(String userId);
